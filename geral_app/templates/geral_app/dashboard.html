@@ -17,12 +17,11 @@
 
 <!-- Grid de Métricas -->
 <div class="fundo-num-linha row g-4 mb-4">
-    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Alunos</p><span>00</span></div></div>
-    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Questões</p><span>00</span></div></div>
-    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Nota Média</p><span>00</span></div></div>
-    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Taxa de Acerto Geral</p><span>00%</span></div></div>
-    <div class="col-12 col-lg"><div class="metric-card text-center"><p class="p-dash">Melhoria no Desempenho</p><span>00%</span></div></div>
-</div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Alunos</p><span>{{ total_alunos }}</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Questões</p><span>{{ total_questoes }}</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Nota Média</p><span>{{ nota_media }}</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Taxa de Acerto Geral</p><span>{{ taxa_acerto_geral }}%</span></div></div>
+    <div class="col-12 col-lg"><div class="metric-card text-center"><p class="p-dash">Melhoria no Desempenho</p><span>--%</span></div></div> </div>
 
 <!-- Grid de Gráficos -->
 <div class="fundo-grafico row g-4">
@@ -42,5 +41,8 @@
 {% endblock %}
 
 {% block scripts %}
-{{ block.super }} <script src="{% static 'geral_app/js/charts.js' %}"></script>
+    {{ block.super }} 
+    {{ labels_materia|json_script:"labels-materia" }}
+    {{ data_materia|json_script:"data-materia" }}
+    <script src="{% static 'geral_app/js/charts.js' %}"></script>
 {% endblock %}

@@ -80,3 +80,5 @@ def quiz(request):
     
     
     return render(request, 'gerador_app/quiz.html', {'questoes':questoes})
+
+
