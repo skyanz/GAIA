@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg, Case, When, FloatField
 from gerador_app.models import Questao, RespostaAluno, Categoria
-from alunos_app.models import Aluno
 from django.db.models.functions import Coalesce # Para evitar nulos
 
 @login_required

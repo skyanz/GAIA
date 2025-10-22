@@ -34,7 +34,7 @@
                             <a class="nav-link {% if request.resolver_match.app_name == 'alunos_app' %}active{% endif %}" href="{% url 'alunos_app:alunos' %}">Alunos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.view_name == 'quiz' %}active{% endif %}" href="{% url 'quiz' %}">Quiz</a>
+                            <a class="nav-link {% if request.resolver_match.view_name == 'exibir_quiz' %}active{% endif %}" href="{% url 'exibir_quiz' %}">Quiz</a>
                         </li>
                     </ul>
                     <div class="d-flex align-items-center user-info">
