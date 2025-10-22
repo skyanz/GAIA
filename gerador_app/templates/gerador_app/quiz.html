@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quiz - GAIA{% endblock %}
+
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="titulo-pag d-flex justify-content-between align-items-center mb-4">
+    <h2 class="dashboard-title">Quiz Interativo</h2>
+    <a href="{% url 'dashboard' %}">
+        <div class="home-icon-wrapper">
+            <i class="fas fa-home"></i>
+        </div>
+    </a>
+</div>
+
+<div class="app-card p-4 p-md-5">
+    {% if questoes %}
+        <div id="quiz-container">
+            {% for questao in questoes %}
+                <div class="mb-4">
+                    <h3>Questão {{ questao.id }}</h3>
+                    <p>{{ questao.enunciado }}</p>
+                    <div class="alternativa mb-2">
+                        <input type="radio" id="alternativa-a-{{ questao.id }}" name="alternativa-{{ questao.id }}">
+                        <label for="alternativa-a-{{ questao.id }}">A) {{ questao.alternativa_a }}</label>
+                    </div>
+                    <div class="alternativa mb-2">
+                        <input type="radio" id="alternativa-b-{{ questao.id }}" name="alternativa-{{ questao.id }}">
+                        <label for="alternativa-b-{{ questao.id }}">B) {{ questao.alternativa_b }}</label>
+                    </div>
+                    <div class="alternativa mb-2">
+                        <input type="radio" id="alternativa-c-{{ questao.id }}" name="alternativa-{{ questao.id }}">
+                        <label for="alternativa-c-{{ questao.id }}">C) {{ questao.alternativa_c }}</label>
+                    </div>
+                    <div class="alternativa mb-2">
+                        <input type="radio" id="alternativa-d-{{ questao.id }}" name="alternativa-{{ questao.id }}">
+                        <label for="alternativa-d-{{ questao.id }}">D) {{ questao.alternativa_d }}</label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div id="quiz-container">
+            <p class="text-muted mb-0">Sem questões carregadas. Volte ao gerador, selecione questões e clique em "Abrir no Quiz".</p>
+        </div>
+    {% endif %}
+
+    <div class="d-flex gap-2 mt-3">
+        <button id="btn-enviar-quiz" type="button" class="btn btn-primary btn-sm" disabled>Enviar Respostas</button>
+        <button id="btn-refazer-quiz" type="button" class="btn btn-outline-secondary btn-sm" disabled>Refazer</button>
+        <a href="{% url 'gerador_questoes' %}" class="btn btn-link btn-sm">Voltar ao Gerador</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }} <script src="{% static 'gerador_app/js/quiz.js' %}"></script>
+{% endblock %}
+
+

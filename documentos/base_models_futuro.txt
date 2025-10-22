@@ -1,0 +1,121 @@
+# seu_app/models.py
+from django.db import models
+from django.contrib.auth.models import User
+
+# Model removido: Login (Inseguro e redundante. Use o User do Django)
+# Model removido: Alunos (Dados devem vir de uma API externa)
+
+class Aluno(models.Model):
+    nome = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nome
+    
+# Models para Estrutura e Organização (Substituindo os 'choices')
+class Turma(models.Model):
+    """
+    Representa uma turma. É melhor ter um model do que um CharField.
+    Ex: '1º Ano EM', '2º Ano EM'.
+    """
+    nome = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nome
+
+class AlunoTurma(models.Model):
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
+    turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
+
+class Categoria(models.Model):
+    """
+    Representa as matérias/submatérias.
+    Ex: 'Geometria', 'Equação de Segundo Grau'.
+    """
+    nome = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nome
+
+
+# Model Professor (Corrigido e usando as relações)
+class Professor(models.Model):
+    # O OneToOneField está perfeito!
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Usuário de Acesso")
+    nome_completo = models.CharField(max_length=100, verbose_name="Nome Completo")
+    # Relação ManyToMany: um professor pode ter várias turmas.
+    turmas = models.ManyToManyField(Turma, related_name='professores')
+    materia = models.CharField(max_length=30, verbose_name="Matéria")
+
+    def __str__(self):
+        return self.nome_completo
+    
+
+# Model Questao (Unificando 'QuestaoCria' e 'Questao')
+class Questao(models.Model):
+    DIFICULDADE_CHOICES = [
+        ('F', 'Fácil'),
+        ('M', 'Média'),
+        ('D', 'Difícil'),
+    ]
+    
+    # ForeignKey é mais robusto que um CharField com 'choices'
+    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT, related_name='questoes')
+    dificuldade = models.CharField(max_length=1, choices=DIFICULDADE_CHOICES)
+    enunciado = models.TextField()
+    
+    # JSONField é mais flexível para as alternativas
+    # Ex: {"A": "Texto da alternativa A", "B": "Texto da B", ...}
+    alternativas = models.JSONField(default=dict)
+    
+    # Armazena a chave da alternativa correta (ex: "A")
+    resposta_correta = models.CharField(max_length=1)
+    
+    # Para saber quem gerou a questão (opcional, mas útil)
+    criado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        # Limita o tamanho do enunciado para melhor visualização no Admin
+        return self.enunciado[:50] + '...'
+
+class Avaliacao(models.Model):
+    """
+    Agrupa um conjunto de questões que são aplicadas a uma turma.
+    Isso facilita a gestão e análise dos resultados.
+    """
+    titulo = models.CharField(max_length=200, verbose_name="Título")
+    turma = models.ForeignKey(Turma, on_delete=models.CASCADE, related_name='avaliacoes')
+    questoes = models.ManyToManyField(Questao, related_name='avaliacoes')
+    professor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='avaliacoes_criadas')
+
+    def __str__(self):
+        return f"{self.titulo} - {self.turma.nome}"
+
+# Model Resposta (Seguindo convenções e o requisito da API externa)
+class RespostaAluno(models.Model): # Nome no singular
+    avaliacao = models.ForeignKey(Avaliacao, on_delete=models.CASCADE, related_name='respostas')
+
+    # Relações com os models do nosso sistema
+    questao = models.ForeignKey(Questao, on_delete=models.CASCADE)
+    
+    # Campo para o ID do aluno que vem da API externa.
+    # db_index=True otimiza as buscas por este campo.
+    aluno_id_externo = models.CharField(max_length=255, db_index=True)
+    
+    # Resposta que o aluno marcou (ex: "A", "B", etc.)
+    resposta_aluno = models.CharField(max_length=1)
+    
+    # Um campo para já guardar se a resposta foi correta ou não.
+    # Facilita muito na hora de gerar os gráficos no dashboard.
+    esta_correta = models.BooleanField()
+
+    def save(self, *args, **kwargs):
+        # Adiciona uma lógica para verificar a resposta antes de salvar
+        self.esta_correta = (self.resposta_aluno == self.questao.resposta_correta)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'Resposta de {self.aluno_id_externo} para a questão {self.questao.id}'
+    
+    class Meta:
+        # Garante que um aluno só pode responder uma vez a cada questão de uma avaliação
+        unique_together = ('avaliacao', 'questao', 'aluno_id_externo')

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - GAIA{% endblock %}
+
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="titulo-pag d-flex justify-content-between align-items-center mb-4">
+    <h2 class="dashboard-title">Dashboard de Desempenho</h2>
+    <a href="{% url 'dashboard' %}">
+        <div class="home-icon-wrapper">
+            <i class="fas fa-home"></i>
+        </div>
+    </a>
+</div>
+
+<!-- Grid de Métricas -->
+<div class="fundo-num-linha row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Alunos</p><span>00</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Qnt. Questões</p><span>00</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Nota Média</p><span>00</span></div></div>
+    <div class="col-12 col-sm-6 col-lg"><div class="metric-card text-center"><p class="p-dash">Taxa de Acerto Geral</p><span>00%</span></div></div>
+    <div class="col-12 col-lg"><div class="metric-card text-center"><p class="p-dash">Melhoria no Desempenho</p><span>00%</span></div></div>
+</div>
+
+<!-- Grid de Gráficos -->
+<div class="fundo-grafico row g-4">
+    <div class="col-lg-6">
+        <div class="titulo-pag mb-3">Desempenho por Matéria</div>
+        <div class="chart-card">
+            <div class="card-body"><canvas id="desempenhoMateriaChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="titulo-pag mb-3">Evolução de Desempenho</div>
+        <div class="chart-card">
+            <div class="card-body"><canvas id="evolucaoDesempenhoChart"></canvas></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }} <script src="{% static 'geral_app/js/charts.js' %}"></script>
+{% endblock %}

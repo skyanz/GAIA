@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gerador de Questões - GAIA{% endblock %}
+
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="titulo-pag d-flex justify-content-between align-items-center mb-4">
+    <h2 class="dashboard-title">Gerador de Questões</h2>
+    <a href="{% url 'dashboard' %}">
+        <div class="home-icon-wrapper">
+            <i class="fas fa-home"></i>
+        </div>
+    </a>
+</div>
+
+<div class="app-card p-4 p-md-5">
+    <form id="gerador-form">
+        {% csrf_token %}
+        <h4 class="mb-4">Tipo de Questões</h4>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <label for="num_questoes" class="form-label">Número de Questões</label>
+                <input type="number" class="form-control" id="num_questoes" name="num_questoes" value="5" min="1" max="20">
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <label for="dificuldade" class="form-label">Dificuldade</label>
+                <select class="form-select" id="dificuldade" name="dificuldade">
+                    <option value="Fácil">Fácil</option>
+                    <option value="Média" selected>Média</option>
+                    <option value="Difícil">Difícil</option>
+                </select>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <label for="num_materias" class="form-label">Número de Matérias</label>
+                <select class="form-select" id="num_materias" name="num_materias">
+                    <option value="1">1 Matéria</option>
+                    <option value="2">2 Matérias</option>
+                    <option value="3" selected>3 Matérias</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="materia1" class="form-label">Matéria 1</label>
+                <input type="text" class="form-control" id="materia1" name="materia1" placeholder="Ex: Biologia Celular">
+            </div>
+            <div class="col-md-4">
+                <label for="materia2" class="form-label">Matéria 2</label>
+                <input type="text" class="form-control" id="materia2" name="materia2" placeholder="Ex: Genética">
+            </div>
+            <div class="col-md-4">
+                <label for="materia3" class="form-label">Matéria 3</label>
+                <input type="text" class="form-control" id="materia3" name="materia3" placeholder="Ex: Ecologia">
+            </div>
+            <div class="col-12">
+                <label for="detalhes" class="form-label">Detalhes Extras (Opcional)</label>
+                <textarea class="form-control" id="detalhes" name="detalhes" rows="4" placeholder="Ex: Foque em questões sobre a mitocôndria; use exemplos do cotidiano..."></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4 px-4 py-2">Criar</button>
+    </form>
+</div>
+
+<!-- Seção de Resultados -->
+<div id="resultado" class="mt-5" style="display: none;">
+    <div class="titulo-pag">
+        <h2 class="dashboard-title mb-4">Questões Geradas</h2>
+    </div>
+    <div class="">
+        <div id="loading" class="text-center p-5" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Gerando...</span>
+            </div>
+            <p class="mt-2">Gerando questões, por favor aguarde...</p>
+        </div>
+
+        <div class="card-body">
+            <div id="questoes-container" class="questoes-container">
+            </div>
+
+            <div class="mt-5" id="gabarito-container">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }} <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="{% static 'gerador_app/js/gerador.js' %}"></script>
+{% endblock %}

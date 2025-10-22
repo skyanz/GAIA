@@ -1,0 +1,52 @@
+# --- PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- DJANGO ---
+*.log
+db.sqlite3
+media/
+staticfiles/
+.env
+.env.*
+
+# --- VENV ---
+venv/
+env/
+.venv/
+ENV/
+Pipfile.lock
+poetry.lock
+
+# --- IDEs / EDITORES ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# --- SISTEMA ---
+.DS_Store
+Thumbs.db
+
+# --- TESTES ---
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+nosetests.xml
+
+# --- MIGRAÇÕES ---
+*/migrations/__pycache__/
+*/migrations/*.pyc
+# (Descomente a linha abaixo se quiser ignorar migrações criadas)
+# */migrations/*.py
+
+# --- BUILD / DEPLOY ---
+build/
+dist/
+*.egg-info/
+*.egg

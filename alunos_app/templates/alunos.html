@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Alunos - GAIA{% endblock %}
+
+{% block body_class %}app-page{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">Alunos</h1>
+    <a href="{% url 'dashboard' %}">
+        <div class="home-icon-wrapper">
+            <i class="fas fa-home"></i>
+        </div>
+    </a>
+</div>
+
+<!-- Card de Filtro -->
+<div class="filter-card mb-4">
+    <div class="card-body">
+        <h5 class="card-title mb-3">
+            <i class="fas fa-filter me-2"></i>Filtro de Detalhes
+        </h5>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="turmaSelect" class="form-label">Turma</label>
+                <select class="form-select" id="turmaSelect">
+                    <option selected>Todas as Turmas</option>
+                    <option value="1">1º EM</option>
+                    <option value="2">2º EM</option>
+                    <option value="3">3º EM</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for aluno in alunos %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card-aluno">
+                <div class="card-aluno-header">
+                    <a href="{% url 'dashboard_aluno' %}" style="text-decoration: none; color: var(--secondary-blue)">
+                        <h3 class="nome-aluno">{{ aluno.nome }}</h3>
+                    </a>
+                    <h3 class="turma-aluno">{{ aluno.turma }}</h3>
+                </div>
+                <div class="card-aluno-stats">
+                    <div class="stat">
+                        <p class="p1">{{ aluno.desempenho }}%</p>
+                        <p class="p2">Desempenho</p>
+                    </div>
+                    <div class="stat">
+                        <p class="p1">{{ aluno.questoes_respondidas }}</p>
+                        <p class="p2">Questões</p>
+                    </div>
+                    <div class="stat">
+                        <p class="p1">{{ aluno.corretas }}</p>
+                        <p class="p2">Acertos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
